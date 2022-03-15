@@ -1,0 +1,7 @@
+"0","r1 <- raster(m1); r2 <- raster(m2)"
+"0","extent(r1) <- extent(r2) <- extent(c(0,4,0,3))"
+"0","### stack"
+"0","colortable(r1) <- c(""red"",""blue"",""green"")"
+"0","colortable(r2)<- c(""red"",""blue"",""green"",""yellow"")"
+"0","r12 <- stack(r1,r2)"
+"0","plot(r1,axes=TRUE)"

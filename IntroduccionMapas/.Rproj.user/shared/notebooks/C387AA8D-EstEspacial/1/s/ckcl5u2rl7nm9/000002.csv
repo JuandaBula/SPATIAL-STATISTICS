@@ -1,0 +1,2 @@
+"0","# plotea el mapa (um mapa para cada atributo)"
+"0","plot(dp, axes = T,cex.axis=0.8) #cex.axis controla tamaño coordenadas"

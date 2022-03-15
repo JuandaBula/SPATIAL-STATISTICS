@@ -1,0 +1,2 @@
+"0","# Junta varios sfg en un sfc (colección de simple features)"
+"0","geometria3 <- st_sfc(P1,P2,P4,P5)"

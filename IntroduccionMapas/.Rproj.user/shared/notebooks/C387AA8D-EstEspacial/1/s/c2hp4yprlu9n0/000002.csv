@@ -1,0 +1,3 @@
+"0","# Crea el objeto Multipoint (MP)"
+"0","MP <- st_multipoint(coords)"
+"0","plot(MP, axes = TRUE)"

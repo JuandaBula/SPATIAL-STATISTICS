@@ -1,0 +1,6 @@
+"0","# Tabla de atributos"
+"0","num <- c(1,2,3)"
+"0","code <- c(""t"",""t"",""p"")"
+"0","tipo <- c(""Terraceria"",""Terraceria"",""Pavimentada"")"
+"0","tablineas <- data.frame(cbind(num,tipo,code))"
+"0","print(tablineas)"

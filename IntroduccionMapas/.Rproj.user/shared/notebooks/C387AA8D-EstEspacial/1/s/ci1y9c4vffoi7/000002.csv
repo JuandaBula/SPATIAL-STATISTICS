@@ -1,0 +1,6 @@
+"0","# Colecciones de Simple Features (sfc)"
+"0","# Crea varios sfg"
+"0","P1 <- st_point(c(2,5)); P2 <- st_point(c(4,4)); P3 <- st_point(c(5,8))"
+"0","# Junta varios sfg en un sfc (colección de simple features)"
+"0","geometria1 <- st_sfc(P1,P2,P3)"
+"0","# st_sfc(P1,P2, crs = 4326) Proy geográfica LatLong datum WGS84"

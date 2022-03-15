@@ -1,0 +1,27 @@
+"0","# Pregunta por el sistema de proyección"
+"0","st_geometry(dp) # equivalente a print(mx$geometry)"
+"1","Geometry set for 33 features "
+"1","
+"
+"1","Geometry type: MULTIPOLYGON
+"
+"1","Dimension:     XY
+"
+"1","Bounding box:  "
+"1","xmin: 165298.4 ymin: 20565.69 xmax: 1804280 ymax: 1984871"
+"1","
+"
+"1","Projected CRS: Bogota 1975 / Colombia Bogota zone
+"
+"1","First 5 geometries:
+"
+"2","MULTIPOLYGON (((754872.1 1445317, 755883 144499...
+"
+"2","MULTIPOLYGON (((913511.2 1637374, 912870.3 1635...
+"
+"2","MULTIPOLYGON (((1006436 1021680, 1006048 102040...
+"
+"2","MULTIPOLYGON (((881889.9 1644370, 882454.5 1642...
+"
+"2","MULTIPOLYGON (((1206428 1268967, 1207192 126864...
+"

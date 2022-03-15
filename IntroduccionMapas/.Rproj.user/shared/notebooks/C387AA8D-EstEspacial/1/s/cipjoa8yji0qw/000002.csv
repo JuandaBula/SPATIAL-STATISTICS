@@ -1,0 +1,4 @@
+"0","library(sp)"
+"0","dp_sp <- as(dp, Class = ""Spatial"")"
+"0","# Regreso a sf con st_as_sf():"
+"0","dp_sf <- st_as_sf(dp_sp, ""sf"")"

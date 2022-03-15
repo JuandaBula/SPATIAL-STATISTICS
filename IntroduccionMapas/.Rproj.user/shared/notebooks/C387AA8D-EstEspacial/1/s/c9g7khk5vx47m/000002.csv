@@ -1,0 +1,4 @@
+"0","# Crea un objeto Multilineas: conjunto de objetos Linestring"
+"0","L1L2 <- st_multilinestring(list(L1,L2))"
+"0","# Junta varios sfg en un sfc (colección de simple features)"
+"0","geometria2 <- st_sfc(L1,L2,L3)"

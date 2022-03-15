@@ -1,0 +1,3 @@
+"0","# sf object"
+"0","SFL <- st_sf(tablineas, geometry = geometria2)"
+"0","plot(SFL,axes=TRUE)"

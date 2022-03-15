@@ -1,0 +1,8 @@
+"0","# sf object"
+"0","SFP <- st_sf(tabpuntos, geometry = geometria1)"
+"0","class(SFP) # doble clase: simple feature y dataframe"
+"1","[1]"
+"1"," ""sf""        "
+"1"," ""data.frame"""
+"1","
+"

@@ -1,0 +1,696 @@
+---
+title: <center> <h1> Análisis espacial con R </h1> </center>
+author: <center> <h4> Juan Daniel Bula Isaza </h4> </center>
+date: <center> <h5> 12 de Marzo de 2022 </h5> </center>
+output:
+  html_document: 
+    toc: yes
+    toc_float: yes
+    code_folding: hide
+    highlight: zenburn
+    theme: united
+    df_print: paged
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T)
+knitr::opts_chunk$set(warning = F)
+knitr::opts_chunk$set(message = F)
+```
+
+
+<h1> 1. Introducción </h1>
+<p align = "justify"> La dinámica con este trabajo, consiste en realizar la lectura y retroalimentación del libro "Análisis espacial con R: Usa R como un sistema de información geográfica" por *Jean Francois Mas* [Análisis espacial con R](https://drive.google.com/file/d/1HhKLQnqRvpM5ersaBbt1L4d_MJdejW8c/view), replicando los códigos R, utilizando como insumo datos georeferenciados de colombia. </p>
+
+<h3> Enlaces de soporte </h3>
+
+* En el enlace se encuentra alojado el *Github* principal que contiene todos los archivos y scripts utilizados para la construcción e implementación de este trabajo [Enlace: Github principal](https://github.com/JuandaBula/TAE-TRABAJO-01)
+
+
+<h1> 2. Organización de los datos espaciales con R </h2>
+<p align = "justify"> Replicación de códigos desde el capítulo 3 del libro "Análisis espacial con R: Usa R como un sistema de información geográfica":</p>
+
+sf permite manejar datos en dos, tres o cuatro dimensiones. Típicamente, la tercera dimensión es la altura (z) y la cuarta (m) alguna medición (temperatura por ejemplo). Las coordenadas se presentan en forma de vector o de tabla y se transforman en una cobertura de puntos de la clase sfg: simple feature geometry con la función st_point() (un solo punto) o st_multipoint() (varios puntos).
+```{r}
+library(sf) # install.packages("sf") si necesario instalar sf
+# Geometrías Simple Features (sfg)
+# Point: coordenadas de un punto en 2, 3 o 4 dimensiones
+P <- st_point(c(2,5)) # 2 dimensiones (XY)
+class(P)
+```
+
+
+```{r}
+P <- st_point(c(2,5,17,44),"XYZM") # 4 dimensiones (XYZM)
+class(P)
+```
+
+```{r}
+str(P)
+```
+
+```{r}
+plot(P, axes = TRUE)
+```
+
+```{r}
+# Multipoint: coordenadas de varios puntos en 2, 3 o 4 dimensiones
+# Crea un vector of coordenadas en x
+Xs <- c(2,4,5)
+# Crea un vector of coordenadas en y
+Ys <- c(5,4,8)
+# Pega Xs y Ys para crear una tabla de coordenadas
+coords <- cbind(Xs,Ys)
+print(coords)
+```
+
+
+```{r}
+# Crea el objeto Multipoint (MP)
+MP <- st_multipoint(coords)
+plot(MP, axes = TRUE)
+```
+
+```{r}
+class(MP)
+```
+
+```{r}
+print(MP)
+```
+
+```{r}
+# Multipoint en 3 dimensiones
+xyz <- cbind(coords,c(17, 22, 31))
+print(xyz)
+```
+
+
+```{r}
+MP <- st_multipoint(xyz)
+print(MP)
+```
+
+Se pueden juntar objetos en colecciones (sfc) con la función st_sfc(). Por ejemplo, geometria1 es un objeto de la clase simple feature collection (sfc) que junta los puntos P1, P2 y P3. En este paso, es posible determinar
+el sistema de coordenadas de los datos con la opción crs. El sistema de coordenadas puede ser descrito por el
+código numérico EPSG o bien por el sistema de Proj4string.
+
+
+```{r}
+# Colecciones de Simple Features (sfc)
+# Crea varios sfg
+P1 <- st_point(c(2,5)); P2 <- st_point(c(4,4)); P3 <- st_point(c(5,8))
+# Junta varios sfg en un sfc (colección de simple features)
+geometria1 <- st_sfc(P1,P2,P3)
+# st_sfc(P1,P2, crs = 4326) Proy geográfica LatLong datum WGS84
+```
+
+```{r}
+# Asociando una geometria sfc con una tabla de atributos (data frame)
+# Tabla con ID (campo num) e información adicional (tabla de atributos)
+num <- c(1,2,3)
+nombre <- c("Pozo","Gasolinera","Pozo")
+tabpuntos <- data.frame(cbind(num,nombre))
+class(tabpuntos)
+```
+
+```{r}
+print(tabpuntos)
+```
+
+
+```{r}
+# sf object
+SFP <- st_sf(tabpuntos, geometry = geometria1)
+class(SFP) # doble clase: simple feature y dataframe
+```
+
+
+```{r}
+print(SFP) # ver columna lista "geometry"
+```
+
+```{r}
+plot(SFP,axes=TRUE)
+```
+
+```{r}
+plot(st_geometry(SFP),axes=TRUE)
+```
+
+```{r}
+# Se puede extraer la tabla de atributos de un objeto SFC con
+as.data.frame(SFP)
+```
+
+**Cobertura de líneas**
+
+```{r}
+# Crea 3 objetos "Linestring": simple cadena de coordenadas (vértices)
+# Línea L1
+X1s <- c(0,3,5,8,10)
+Y1s <- c(0,3,4,8,10)
+Coord1 <- cbind(X1s,Y1s)
+# Crea objeto de Clase Linestring
+L1 <- st_linestring(Coord1)
+class(L1)
+```
+
+
+```{r}
+print(L1)
+```
+
+```{r}
+# Línea L2
+X2s <- c(2,1,1)
+Y2s <- c(2,4,5)
+Coord2 <- cbind(X2s,Y2s)
+# Crea objeto de Clase Linestring
+L2 <- st_linestring(Coord2)
+# Línea 3
+X3s <- c(8,8)
+Y3s <- c(8,5)
+Coord3 <- cbind(X3s,Y3s)
+# Crea objeto de Clase Linestring
+L3 <- st_linestring(Coord3)
+```
+
+```{r}
+# Crea un objeto Multilineas: conjunto de objetos Linestring
+L1L2 <- st_multilinestring(list(L1,L2))
+# Junta varios sfg en un sfc (colección de simple features)
+geometria2 <- st_sfc(L1,L2,L3)
+```
+
+
+Para crear un objeto sf, se asocia una tabla de atributos a las líneas de una forma similar a la que seguimos para las coberturas de puntos.
+
+```{r}
+# Tabla de atributos
+num <- c(1,2,3)
+code <- c("t","t","p")
+tipo <- c("Terraceria","Terraceria","Pavimentada")
+tablineas <- data.frame(cbind(num,tipo,code))
+print(tablineas)
+```
+
+```{r}
+# sf object
+SFL <- st_sf(tablineas, geometry = geometria2)
+plot(SFL,axes=TRUE)
+```
+
+```{r}
+class(SFL) # doble clase: simple feature y dataframe
+```
+
+```{r}
+print(SFL) # ver columna lista "geometry"
+```
+
+
+```{r}
+# Se puede extraer la tabla de atributos de un SFC con
+as.data.frame(SFL)
+```
+
+```{r}
+# Se puede selecionar ciertos rasgos usando la tabla de atributos
+print(SFL[tipo=="Pavimentada",])
+```
+
+
+```{r}
+plot(st_geometry(SFL[tipo=="Terraceria",]),col="red",axes=TRUE)
+plot(st_geometry(SFL[tipo=="Pavimentada",]),add=TRUE)
+```
+
+
+**Cobertura de polígonos**
+
+Para crear una cobertura de polígonos, se crean objetos Polygon a partir de las coordenadas de vértices que crean una forma cerrada utilizando la función st_polygon(). La secuencia de los vértices es en sentido de las manecillas del reloj para delimitar ”huecos” dentro de otro polígono y en sentido contrario para el contorno externo. Finalmente, se agrupan varios objetos en una colección utilizando la función st_sfc().
+
+
+```{r}
+## P1 Polígono forestal al SudEste
+## Polygon
+# Crea una cadena de coordenadas en X
+X1 <- c(5,10,10,6,5)
+# Crea una cadena de coordenadas en Y
+# Ojo tiene que cerrar (último par de coord = primero)
+Y1 <- c(0,0,5,5,0)
+# Pega X y Y para crear una tabla de coordenadas
+c1 <- cbind(X1,Y1)
+print(c1)
+```
+
+```{r}
+class(c1)
+```
+
+```{r}
+# Crea el objeto Polygon. Un polygon es una forma simple cerrada
+# eventualmente con hueco(s)
+P1 <- st_polygon(list(c1))
+plot(P1,axes=T)
+```
+
+
+
+```{r}
+# P2 Polígono forestal al NorOeste
+# Crea una cadena de coordenadas en X
+X2 <- c(0,2,6,0,0)
+# Crea una cadena de coordenadas en Y
+Y2 <- c(4,4,10,10,4)
+# Pega X y Y para crear una tabla de coordenadas
+c2 <- cbind(X2,Y2)
+# Polígono hueco %%%%%%%%%%%%%% orden coordenadas !!!!!!!!!!!!!
+# Crea una cadena de coordenadas en X
+X3 <- c(1,1,2,2,1)
+# Crea una cadena de coordenadas en Y
+# La 1a y última coordenadas se repiten para "cerrar" el polígono
+Y3 <- c(5,6,6,5,5)
+# Pega X y Y para crear una tabla de coordenadas
+c3 <- cbind(X3,Y3)
+P2 <- st_polygon(list(c2,c3))
+plot(P2,axes=T)
+```
+
+
+```{r}
+# P4 Polígono de agricultura
+c3i <- c3[nrow(c3):1, ] # Invierte el orden de las coordenadas
+P4 = st_polygon(list(c3i)) # Esta vez no es hueco
+# P5 Polígono de área urbana
+X5 <- c(0,5,6,10,10,6,2,0,0)
+Y5 <- c(0,0,5,5,10,10,4,4,0)
+c5 <- cbind(X5,Y5)
+P5 <- st_polygon(list(c5))
+plot(P5,axes=T)
+```
+
+```{r}
+# Junta varios sfg en un sfc (colección de simple features)
+geometria3 <- st_sfc(P1,P2,P4,P5)
+```
+
+
+Creación tabla de atributos y gráfico objeto sf:
+
+```{r}
+# Tabla de atributos
+ID <- c(1,2,3,4)
+code <- c("F","F","U","A")
+tipo <- c("Bosque","Bosque","Urbano","Agricultura")
+tabpol <- data.frame(cbind(ID,code,tipo))
+# sf object
+SFPol <- st_sf(tabpol, geometry = geometria3)
+plot(SFPol,axes=TRUE)
+```
+
+```{r}
+class(SFPol) # doble clase: simple feature y dataframe
+```
+
+
+```{r}
+print(SFPol) # ver columna lista "geometry"
+```
+
+```{r}
+summary(SFPol)
+```
+
+
+La tabla de atributos permite extraer ciertos rasgos. Las últimas líneas del código a continuación muestran que una colección puede eventualmente juntar diferentes tipos de geometría como puntos, lineas y polígonos.
+
+
+```{r}
+# Se puede extraer la tabla de atributos de un SFC con
+as.data.frame(SFPol)
+```
+
+```{r}
+# Se puede selecionar ciertos rasgos usando la tabla de atributos
+print(SFPol[tipo=="Bosque",])
+```
+
+
+```{r}
+Bosque <- SFPol[tipo=="Bosque",]
+plot(st_geometry(SFPol),axes=FALSE); plot(Bosque,add=TRUE, col = "green")
+```
+
+```{r}
+### Una colección puede eventualmente juntar diferentes tipos de geometría
+Detodo <- st_sfc(P1,P2,L1,L2,P1)
+plot(Detodo,border="red",axes=T)
+```
+
+## **3. Datos raster: Clase RasterLayer en el paquete raster**
+
+
+El paquete raster permite manejar datos raster con el objeto de clase RasterLayer. El raster puede obtenerse a partir de una matriz que contiene los valores de cada celda. La extensión especial es definida por la función extent() introduciendo las coordenadas extremas del raster (x mínimo, x máximo, y mínimo, y máximo).
+
+
+```{r}
+# install.packages("raster") # eliminar comentario para instalar paquete
+library(raster)
+# Creamos una matriz
+m <- matrix(c(1,2,3,4,2,NA,2,2,3,3,3,1),ncol=4,nrow=3,byrow=TRUE)
+m
+```
+
+```{r}
+r <- raster(m)
+extent(r) <- extent(c(0,4,0,3))
+class(r)
+```
+
+
+```{r}
+print(r)
+```
+
+
+```{r}
+plot(r)
+```
+
+
+## **4. Importación/exportación de datos espaciales**
+
+
+*Importación de archivos Shape*
+
+
+El formato shapefile es un formato de archivos para datos vectoriales desarrollado por la compañía ESRI y
+ampliamente utilizado. Está compuesto por lo menos por tres ficheros informáticos que tienen las extensiones
+siguientes:
+
+* .shp: almacena las entidades geométricas de los objetos.
+
+* .shx: almacena el índice de las entidades geométricas.
+
+* .dbf: almacena la tabla de atributos de los objetos.
+
+Es común encontrar un cuarto archivo con extensión .prj que contiene la información referida al sistema de coordenadas.
+
+
+```{r}
+# Carga el paquete sf
+library(sf)
+```
+
+```{r}
+dp <- st_read("depto.shp")
+```
+
+```{r}
+class(dp) # Es un simple feature "sf"
+```
+
+```{r}
+summary(dp) # un dataframe con una columna "lista" sobre la geometría
+```
+
+* plotea el mapa (um mapa para cada atributo)
+
+```{r}
+# plotea el mapa (um mapa para cada atributo)
+plot(dp, axes = T,cex.axis=0.8) #cex.axis controla tamaño coordenadas
+```
+
+* Para plotear únicamente la geometría
+
+
+```{r}
+# Para plotear únicamente la geometría
+plot(st_geometry(dp))
+```
+
+
+# Sistema de proyección:
+
+```{r}
+# Pregunta por el sistema de proyección
+st_geometry(dp) # equivalente a print(mx$geometry)
+```
+
+
+```{r}
+st_crs(dp) # por código EPSG y proj4string
+```
+
+
+Ciertos archivos no contienen la información del sistema de coordenadas, en este caso es importante determinarlo utilizando la función st_crs(). La función st_is_valid() permite detectar errores de geometría como intersecciones.
+
+
+.............
+carr <- st_read("carretera.shp")
+## Reading layer `carretera' from data source
+`/home/jf/recursos-mx/carretera.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 12424 features and 4 fields
+## geometry type: LINESTRING
+## dimension: XY
+## bbox: xmin: 1071375 ymin: 324561 xmax: 4076832 ymax: 2349296
+## epsg (SRID): NA
+## proj4string: +proj=lcc +lat_1=17.5 +lat_2=29.5 +lat_0=12 +lon_0=-102
++x_0=2500000 +y_0=0 +ellps=GRS80 +units=m +no_defs
+
+st_crs(carr) # No hay información sobre el sistema de coordenadas
+## Coordinate Reference System:
+## No EPSG code
+## proj4string: "+proj=lcc +lat_1=17.5 +lat_2=29.5 +lat_0=12 +lon_0=-102
++x_0=2500000 +y_0=0 +ellps=GRS80 +units=m +no_defs"
+# se define:
+st_crs(carr) <- "+proj=lcc +lat_1=17.5 +lat_2=29.5 +lat_0=12 +lon_0=-102
++x_0=2500000 +y_0=0 +ellps=GRS80 +units=m +no_defs"
+
+#Test de la validez de los mapas
+st_is_valid(mx)
+## [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+## [14] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+## [27] TRUE TRUE TRUE TRUE TRUE TRUE
+# st_is_valid(carr)
+.....................
+
+
+**Exportación a shape o a otros formatos**
+
+Podemos salvar un objeto espacial de la clase sf en formato shape o en otro formato con la función st_write().
+
+
+```{r}
+# Salva el objeto en formato shape
+st_write(dp,"depto.shp",delete_layer = TRUE)
+```
+
+```{r}
+st_write(dp, dsn = "dp.gpkg", delete_layer = TRUE)
+```
+
+Dentro de R, es también posible transformar objetos espaciales entre formatos de varios paquetes. Esta opción
+puede ser particularmente útil para utilizar ciertos paquetes que solo manejan objetos de sp. En sp la función as() permite importar un objeto sf en clase Spatial de sp. Al inverso, st_as_sf() permite pasar de sp a sf.
+
+
+```{r}
+library(sp)
+dp_sp <- as(dp, Class = "Spatial")
+# Regreso a sf con st_as_sf():
+dp_sf <- st_as_sf(dp_sp, "sf")
+```
+
+
+## **5. Importación / exportación de datos raster**
+
+
+En el paquete raster, la función raster() permite importar imágenes de muchísimos formatos de imagen en
+objetos RasterLayer. Al contrario, la función writeRaster() permite salvar los objetos RasterLayer en varios
+formatos de imagen incluyendo ENVI, ESRI, ERDAS, GeoTiff, IDRISI y SAGA (opción format). La opción datatype
+permite escoger la codificación de los datos. Por ejemplo INT1U, es la codificación en 8 bits con valores de 0 a 255.
+
+
+```{r}
+library(raster)
+# Importa imagen
+barcelona <- raster("mapaBTN25_epsg25831_0391-1_COG.tif")
+class(barcelona)
+```
+
+```{r}
+plot(barcelona)
+```
+
+
+```{r}
+extent(barcelona)
+```
+
+```{r}
+# Formatos disponibles para salvar
+writeFormats()
+```
+
+```{r}
+# Salva el raster en formato LAN
+writeRaster(barcelona, filename="Barca.lan", format="LAN", overwrite=TRUE,
+
+datatype="INT2S")
+```
+
+
+
+## **6. Operaciones básicas de SIG (Vector)**
+
+
+----------------pag 65
+
+..............
+
+
+
+
+## **7. Análisis espacial en formato Raster**
+
+-----------------pag 85
+
+
+```{r}
+m1 <- matrix(c(1,1,2,2,1,1,2,2,1,1,3,3),ncol=4,nrow=3,byrow=TRUE)
+m2 <- matrix(c(1,2,3,4,2,NA,2,2,3,3,3,1),ncol=4,nrow=3,byrow=TRUE)
+print(m1)
+```
+
+```{r}
+print(m2)
+```
+
+
+```{r}
+r1 <- raster(m1); r2 <- raster(m2)
+extent(r1) <- extent(r2) <- extent(c(0,4,0,3))
+### stack
+colortable(r1) <- c("red","blue","green")
+colortable(r2)<- c("red","blue","green","yellow")
+r12 <- stack(r1,r2)
+plot(r1,axes=TRUE)
+```
+
+```{r}
+plot(r2,axes=TRUE)
+```
+
+
+**Caracteríticas del Raster:**
+
+```{r}
+# Características del raster
+res(r1)
+```
+
+Dimensión:
+```{r}
+dim(r12)
+```
+
+
+X máximo
+```{r}
+xmax(r1) # existen también xmax, ymin y ymax
+```
+
+Suma de todos los pixeles
+```{r}
+cellStats(r1,"sum") # suma de todos los pixeles
+```
+
+desv estándar de todos los pixeles
+```{r}
+cellStats(r1,"sd") # desv estándar de todos los pixeles
+```
+
+
+**Importación de un shape con sf**
+```{r}
+# Importación de un shape con sf
+library(sf)
+dpt <- st_read("depto.shp")
+```
+
+
+```{r}
+plot(dpt["DPTO"], axes = T,cex.lab=0.8)
+```
+
+
+```{r}
+head(dpt)
+```
+
+
+```{r}
+st_bbox(dpt)
+```
+
+
+```{r}
+st_crs(dpt)
+```
+
+Rasteriza con paquete raster
+```{r}
+## Rasteriza con paquete raster
+resol <- 100
+# Para rasterizar usando un raster "master"
+extension <- extent(c(165298.36, 1804280.29,20565.69, 1984870.73))
+r <- raster(res=resol, ext=extension)
+# Rasteriza con el campo GRIDCODE (as() para convertir a sp)
+dptr <- rasterize(as(dpt,Class = "Spatial"), r, "GRIDCODE")
+plot(dptr,axes=F)
+## Lo mismo con el mapa de 2014
+#cs2014 <- st_read("cs2014.shp")
+```
+
+pag 87
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

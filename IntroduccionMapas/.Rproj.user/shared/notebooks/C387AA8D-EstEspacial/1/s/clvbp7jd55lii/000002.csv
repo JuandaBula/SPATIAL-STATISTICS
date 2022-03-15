@@ -1,0 +1,8 @@
+"0","P <- st_point(c(2,5,17,44),""XYZM"") # 4 dimensiones (XYZM)"
+"0","class(P)"
+"1","[1]"
+"1"," ""XYZM"" "
+"1"," ""POINT"""
+"1"," ""sfg""  "
+"1","
+"

@@ -1,0 +1,4 @@
+"0","# Crea el objeto Polygon. Un polygon es una forma simple cerrada"
+"0","# eventualmente con hueco(s)"
+"0","P1 <- st_polygon(list(c1))"
+"0","plot(P1,axes=T)"

@@ -1,0 +1,13 @@
+"0","library(sf) # install.packages(""sf"") si necesario instalar sf"
+"2","Linking to GEOS 3.9.1, GDAL 3.2.1, PROJ 7.2.1
+"
+"0","# Geometrías Simple Features (sfg)"
+"0","# Point: coordenadas de un punto en 2, 3 o 4 dimensiones"
+"0","P <- st_point(c(2,5)) # 2 dimensiones (XY)"
+"0","class(P)"
+"1","[1]"
+"1"," ""XY""   "
+"1"," ""POINT"""
+"1"," ""sfg""  "
+"1","
+"

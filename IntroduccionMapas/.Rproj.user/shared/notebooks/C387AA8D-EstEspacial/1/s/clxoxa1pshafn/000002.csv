@@ -1,0 +1,4 @@
+"0","MP <- st_multipoint(xyz)"
+"0","print(MP)"
+"2","MULTIPOINT Z ((2 5 17), (4 4 22), (5 8 31))
+"

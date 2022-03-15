@@ -1,0 +1,2 @@
+"0","# Para plotear únicamente la geometría"
+"0","plot(st_geometry(dp))"

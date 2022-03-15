@@ -1,0 +1,4 @@
+"0","# Salva el raster en formato LAN"
+"0","writeRaster(barcelona, filename=""Barca.lan"", format=""LAN"", overwrite=TRUE,"
+"0",""
+"0","datatype=""INT2S"")"

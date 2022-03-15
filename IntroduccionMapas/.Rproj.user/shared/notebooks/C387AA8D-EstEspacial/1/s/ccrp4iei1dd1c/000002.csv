@@ -1,0 +1,8 @@
+"0","# Tabla de atributos"
+"0","ID <- c(1,2,3,4)"
+"0","code <- c(""F"",""F"",""U"",""A"")"
+"0","tipo <- c(""Bosque"",""Bosque"",""Urbano"",""Agricultura"")"
+"0","tabpol <- data.frame(cbind(ID,code,tipo))"
+"0","# sf object"
+"0","SFPol <- st_sf(tabpol, geometry = geometria3)"
+"0","plot(SFPol,axes=TRUE)"

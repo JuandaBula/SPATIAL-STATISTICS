@@ -1,0 +1,2 @@
+"0","Bosque <- SFPol[tipo==""Bosque"",]"
+"0","plot(st_geometry(SFPol),axes=FALSE); plot(Bosque,add=TRUE, col = ""green"")"
