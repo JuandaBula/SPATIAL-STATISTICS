@@ -639,19 +639,7 @@ st_bbox(dpt)
 st_crs(dpt)
 ```
 
-Rasteriza con paquete raster
-```{r}
-## Rasteriza con paquete raster
-resol <- 100
-# Para rasterizar usando un raster "master"
-extension <- extent(c(165298.36, 1804280.29,20565.69, 1984870.73))
-r <- raster(res=resol, ext=extension)
-# Rasteriza con el campo GRIDCODE (as() para convertir a sp)
-dptr <- rasterize(as(dpt,Class = "Spatial"), r, "GRIDCODE")
-plot(dptr,axes=F)
-## Lo mismo con el mapa de 2014
-#cs2014 <- st_read("cs2014.shp")
-```
+
 
 pag 87
 
